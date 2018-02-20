@@ -3,6 +3,14 @@ d3.csv('data.csv', function (error, data) {
 
   if (error) throw error;
 
+  // Cycle throught the row to get your data into the right format
+  // for the chart you'll be creating.
+  data.forEach(row => {
+    row.exports = +row.exports
+  })
+
+  data.sort((desc, ending) => desc.exports - ending.exports);
+
   createChart(data);
 
 });
@@ -27,9 +35,6 @@ class Chart {
     this.element = opts.element;
     this.data = opts.data;
 
-    // Global variables to be used in multiple functions
-    this.rowArray = [];
-
     // Create the chart
     this.draw();
 
@@ -42,7 +47,7 @@ class Chart {
     // Set your dimensions viewport
     this.width = 960; // this.element.offsetWidth;
     this.height = 500; // this.width / 2;
-    this.margin = { top: 20, right: 20, bottom: 50, left: 50 };
+    this.margin = { top: 50, right: 20, bottom: 50, left: 225 };
 
     // Set the dimesions of you chart
     this.innerHeight = this.height - (this.margin.top + this.margin.bottom);
@@ -61,25 +66,9 @@ class Chart {
       .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
 
     // Time to create the other stuff
-    this.cleanData();
     this.createScales();
     this.addAxes();
     this.addChart();
-
-  }
-
-  cleanData() {
-
-    // Cycle throught the row to get your data into the right format
-    // for the chart you'll be creating.
-    this.data.forEach( row => {
-      row.year = +row.year
-      row.exports = +row.exports
-    })
-
-    this.data.forEach( row => {
-      this.rowArray.push(row.exporter);
-    })
 
   }
 
@@ -92,18 +81,16 @@ class Chart {
 
     // Set the scale for you chart
     this.xScale = d3.scaleLinear()
-      .range([0, this.innerWidth - (m.right + m.left)])
+      .range([0, this.innerWidth])
       .domain(xExtent);
 
     // Range relates to pixels
     // Domain relates to data
 
     this.yBand = d3.scaleBand()
-      .rangeRound([this.innerHeight - (m.top + m.bottom), 0])
-      .domain(this.rowArray);
-
-    // Maybe you would like to create a customer color scale?
-    this.areaColorScale = d3.scaleOrdinal([]);
+      .paddingInner(.1)
+      .rangeRound([this.innerHeight, 0])
+      .domain(this.data.map( d => d.exporter ));
 
   }
 
@@ -113,7 +100,7 @@ class Chart {
 
     // Create axises to be called later
     const xAxis = d3.axisBottom()
-      .scale(this.xScale);;
+      .scale(this.xScale);
 
     const yAxis = d3.axisLeft()
       .scale(this.yBand);
@@ -121,27 +108,38 @@ class Chart {
     // Call those axis generators
     this.plot.append("g")
       .attr("class", "x axis")
-      .attr("transform", `translate(0, ${this.innerHeight - m.top})`)
+      .attr("transform", `translate(0, ${this.innerHeight})`)
       .call(xAxis);
 
     // Add x-axis title
     d3.select('.x.axis').append('text')
       .attr('x', this.innerWidth)
-      .attr('y', m.left)
+      .attr('y', 30)
       .text("EXPORTS (USD)")
+      .style("fill", "#999999")
+      .style("text-anchor", "end");
 
     // Add y-axis ticks
     this.plot.append("g")
       .attr("class", "y axis")
-      .attr("transform", 'translate(5, 0)')
+      .attr("transform", 'translate(0, 0)')
       .call(yAxis)
 
     // Add y-axis title
     d3.select('.y.axis').append('text')
-      .attr('x', -25)
-      .attr('y', m.left)
-      .attr('transform', `rotate(-90 0 0)`)
-      .text("COUNTRIES");
+      .attr('x', -9)
+      .attr('y', 0)
+      .text("COUNTRIES")
+      .style("fill", "#999999")
+      .style("text-anchor", "end");
+
+    // Add chart title
+    this.plot.append('text')
+      .attr('x', 0)
+      .attr('y', 0)
+      .text("Top 25 Countries by Medicine Exported in 2016")
+      .style("fill", "#999999")
+      .style("text-anchor", "start");
 
   }
 
@@ -153,10 +151,10 @@ class Chart {
       .data(this.data)
       .enter().append("rect")
       .attr('class', "bar")
-      .attr("x", m.left)
+      .attr("x", 0)
       .attr("y", d => this.yBand(d.exporter))
       .attr("width", d => this.xScale(d.exports))
-      .attr("height", 15)
+      .attr("height", this.yBand.bandwidth())
       .style()
 
   }
