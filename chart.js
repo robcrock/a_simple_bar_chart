@@ -27,6 +27,9 @@ class Chart {
     this.element = opts.element;
     this.data = opts.data;
 
+    // Global variables to be used in multiple functions
+    this.rowArray = [];
+
     // Create the chart
     this.draw();
 
@@ -66,92 +69,96 @@ class Chart {
   }
 
   cleanData() {
-    console.log(this.data);
 
+    // Cycle throught the row to get your data into the right format
+    // for the chart you'll be creating.
     this.data.forEach( row => {
       row.year = +row.year
-      row.exports = +row.expers
+      row.exports = +row.exports
     })
 
-
-    console.log(this.data);
+    this.data.forEach( row => {
+      this.rowArray.push(row.exporter);
+    })
 
   }
 
-  // createScales() {
-  //   // Shorthand to save typing
-  //   const m = this.margin;
+  createScales() {
+    // Shorthand to save typing
+    const m = this.margin;
 
-  //   // Calculate max and min for data
-  //   const xExtent = d3.extent(this.data, d => /* X VARIABLE */ );
-  //   const yExtent = d3.extent(this.data, d => /* Y VARIABLE */ );
+    // Calculate max and min for data
+    const xExtent = d3.extent(this.data, d => d.exports );
 
-  //   // Set the scale for you chart
-  //   this.xScale = d3.scaleLinear()
-  //     .range([0, this.innerWidth - (m.right + m.left)])
-  //     .domain(xExtent);
+    // Set the scale for you chart
+    this.xScale = d3.scaleLinear()
+      .range([0, this.innerWidth - (m.right + m.left)])
+      .domain(xExtent);
 
-  //   // Range relates to pixels
-  //   // Domain relates to data
+    // Range relates to pixels
+    // Domain relates to data
 
-  //   this.yScale = d3.scaleLinear()
-  //     .range([this.innerHeight - (m.top + m.bottom), 0])
-  //     .domain(yExtent);
+    this.yBand = d3.scaleBand()
+      .rangeRound([this.innerHeight - (m.top + m.bottom), 0])
+      .domain(this.rowArray);
 
-  //   // Maybe you would like to create a customer color scale?
-  //   this.areaColorScale = d3.scaleOrdinal([]);
+    // Maybe you would like to create a customer color scale?
+    this.areaColorScale = d3.scaleOrdinal([]);
 
-  // }
+  }
 
-  // addAxes() {
+  addAxes() {
 
-  //   const m = this.margin;
+    const m = this.margin;
 
-  //   // Create axises to be called later
-  //   const xAxis = d3.axisBottom()
-  //     .scale(this.xScale);;
+    // Create axises to be called later
+    const xAxis = d3.axisBottom()
+      .scale(this.xScale);;
 
-  //   const yAxis = d3.axisLeft()
-  //     .scale(this.yScale);
+    const yAxis = d3.axisLeft()
+      .scale(this.yBand);
 
-  //   // Call those axis generators
-  //   this.plot.append("g")
-  //     .attr("class", "x axis")
-  //     .attr("transform", `translate(0, ${this.innerHeight - m.top})`)
-  //     .call(xAxis);
+    // Call those axis generators
+    this.plot.append("g")
+      .attr("class", "x axis")
+      .attr("transform", `translate(0, ${this.innerHeight - m.top})`)
+      .call(xAxis);
 
-  //   // Add x-axis title
-  //   d3.select('.x.axis').append('text')
-  //     .attr('x', this.innerWidth)
-  //     .attr('y', /* SOME OFFSET */)
-  //     .text(/* SOME TITLE */)
+    // Add x-axis title
+    d3.select('.x.axis').append('text')
+      .attr('x', this.innerWidth)
+      .attr('y', m.left)
+      .text("EXPORTS (USD)")
 
-  //   // Add y-axis ticks
-  //   this.plot.append("g")
-  //     .attr("class", "y axis")
-  //     .attr("transform", 'translate(5, 0)')
-  //     .call(yAxis)
+    // Add y-axis ticks
+    this.plot.append("g")
+      .attr("class", "y axis")
+      .attr("transform", 'translate(5, 0)')
+      .call(yAxis)
 
-  //   // Add y-axis title
-  //   d3.select('.y.axis').append('text')
-  //     .attr('x', -25)
-  //     .attr('y', /* SOME OFFSET */)
-  //     .attr('transform', `rotate(-90 0 0)`)
-  //     .text(/* SOME TITLE */);
+    // Add y-axis title
+    d3.select('.y.axis').append('text')
+      .attr('x', -25)
+      .attr('y', m.left)
+      .attr('transform', `rotate(-90 0 0)`)
+      .text("COUNTRIES");
 
-  // }
+  }
 
-  // addChart() {
+  addChart() {
 
-  //   this.plot.selectAll(/* .shapeClass */)
-  //     .data(data)
-  //     .enter().append(/* .shape */)
-  //     .attr('class', /* .shapeClass */)
-  //   // SVG attributes
-  //   // .attr()
-  //   // SVG styles
-  //   // .style()
+    const m = this.margin;
 
-  // }
+    this.plot.selectAll(".bar")
+      .data(this.data)
+      .enter().append("rect")
+      .attr('class', "bar")
+      .attr("x", m.left)
+      .attr("y", d => this.yBand(d.exporter))
+      .attr("width", d => this.xScale(d.exports))
+      .attr("height", 15)
+      .style()
+
+  }
 
 }
