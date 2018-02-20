@@ -109,15 +109,16 @@ class Chart {
     this.plot.append("g")
       .attr("class", "x axis")
       .attr("transform", `translate(0, ${this.innerHeight})`)
-      .call(xAxis);
+      .call(xAxis
+        .ticks(5)
+        .tickFormat(d3.format(".1s")));
 
     // Add x-axis title
     d3.select('.x.axis').append('text')
+      .attr("class", "x axis title")
       .attr('x', this.innerWidth)
       .attr('y', 30)
-      .text("EXPORTS (USD)")
-      .style("fill", "#999999")
-      .style("text-anchor", "end");
+      .text("EXPORTS (USD)");
 
     // Add y-axis ticks
     this.plot.append("g")
@@ -127,19 +128,17 @@ class Chart {
 
     // Add y-axis title
     d3.select('.y.axis').append('text')
+      .attr("class", "y axis title")
       .attr('x', -9)
       .attr('y', 0)
-      .text("COUNTRIES")
-      .style("fill", "#999999")
-      .style("text-anchor", "end");
+      .text("COUNTRIES");
 
     // Add chart title
     this.plot.append('text')
+      .attr("class", "chart title")
       .attr('x', 0)
       .attr('y', 0)
-      .text("Top 25 Countries by Medicine Exported in 2016")
-      .style("fill", "#999999")
-      .style("text-anchor", "start");
+      .text("Top 25 Drug Dealers in 2016");
 
   }
 

@@ -1,0 +1,12 @@
+text {
+  fill: #999999;
+}
+path, line {
+  stroke: none;
+}
+.chart.title {
+  text-anchor: start;
+}
+.y.axis.title, .x.axis.title {
+  text-anchor: end;
+}
