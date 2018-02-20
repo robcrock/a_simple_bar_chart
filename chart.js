@@ -110,8 +110,8 @@ class Chart {
       .attr("class", "x axis")
       .attr("transform", `translate(0, ${this.innerHeight})`)
       .call(xAxis
-        .ticks(5)
-        .tickFormat(d3.format(".1s")));
+        .ticks(10)
+        .tickFormat(d3.format(".2s")));
 
     // Add x-axis title
     d3.select('.x.axis').append('text')
