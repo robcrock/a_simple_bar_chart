@@ -1,12 +1,15 @@
+// Use the D3 library to read in our data
 d3.csv('data.csv', function (error, data) {
 
   if (error) throw error;
 
-  initializeChart(data);
+  createChart(data);
 
 });
 
-function initializeChart(data) {
+// This function executes all we need to create
+// our simple charte
+function createChart(data) {
 
   const chart = new Chart({
     element: document.querySelector('body'),
@@ -15,6 +18,8 @@ function initializeChart(data) {
 
 }
 
+// This constructor can be modified to any type
+// of chart we would like to build.
 class Chart {
 
   constructor(opts) {
@@ -22,44 +27,56 @@ class Chart {
     this.element = opts.element;
     this.data = opts.data;
 
-    console.log(this.data);
-
     // Create the chart
-    // this.draw();
+    this.draw();
 
   }
 
   // UNCOMMENT ONCE YOU HAVE THE DATA
 
-  // draw() {
+  draw() {
 
-  //   // Set your dimensions viewport
-  //   this.width = 960; // this.element.offsetWidth;
-  //   this.height = 500; // this.width / 2;
-  //   this.margin = { top: 20, right: 20, bottom: 50, left: 50 };
+    // Set your dimensions viewport
+    this.width = 960; // this.element.offsetWidth;
+    this.height = 500; // this.width / 2;
+    this.margin = { top: 20, right: 20, bottom: 50, left: 50 };
 
-  //   // Set the dimesions of you chart
-  //   this.innerHeight = this.height - (this.margin.top + this.margin.bottom);
-  //   this.innerWidth = this.width - (this.margin.right + this.margin.left);
+    // Set the dimesions of you chart
+    this.innerHeight = this.height - (this.margin.top + this.margin.bottom);
+    this.innerWidth = this.width - (this.margin.right + this.margin.left);
 
-  //   // Append the SVG that will contain your chart
-  //   const svg = d3.select(this.element).append('svg');
+    // Append the SVG that will contain your chart
+    const svg = d3.select(this.element).append('svg');
 
-  //   svg
-  //     .attr('width', this.width)
-  //     .attr('height', this.height);
+    svg
+      .attr('width', this.width)
+      .attr('height', this.height);
 
-  //   // Now append the an element to position your
-  //   // chart with the SVG
-  //   this.plot = svg.append('g')
-  //     .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
+    // Now append the an element to position your
+    // chart with the SVG
+    this.plot = svg.append('g')
+      .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
 
-  //   // Time to create the other stuff
-  //   this.createScales();
-  //   this.addAxes();
-  //   this.addChart();
+    // Time to create the other stuff
+    this.cleanData();
+    this.createScales();
+    this.addAxes();
+    this.addChart();
 
-  // }
+  }
+
+  cleanData() {
+    console.log(this.data);
+
+    this.data.forEach( row => {
+      row.year = +row.year
+      row.exports = +row.expers
+    })
+
+
+    console.log(this.data);
+
+  }
 
   // createScales() {
   //   // Shorthand to save typing
