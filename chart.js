@@ -1,7 +1,5 @@
 // Use the D3 library to read in our data
-d3.csv('data.csv', function (error, data) {
-
-  if (error) throw error;
+d3.csv('data.csv').then( data => {
 
   // Cycle throught the row to get your data into the right format
   // for the chart you'll be creating.
@@ -47,7 +45,7 @@ class Chart {
     // Set your dimensions viewport
     this.width = 960; // this.element.offsetWidth;
     this.height = 600; // this.width / 2;
-    this.margin = { top: 50, right: 20, bottom: 50, left: 225 };
+    this.margin = { top: 70, right: 20, bottom: 50, left: 225 };
 
     // Set the dimesions of you chart
     this.innerHeight = this.height - (this.margin.top + this.margin.bottom);
@@ -130,8 +128,15 @@ class Chart {
     this.plot.append('text')
       .attr("class", "chart title")
       .attr('x', 0)
-      .attr('y', -10)
-      .text("Top 25 Drug Dealers of 2016");
+      .attr('y', -25)
+      .text("Who sold the most medicine in 2016?");
+
+    // Add chart subtitle
+    this.plot.append('text')
+      .attr("class", "chart subtitle")
+      .attr('x', 0)
+      .attr('y', -5)
+      .text("Below are the top 25 countries and their 2016 sales");
 
   }
 
