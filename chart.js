@@ -46,7 +46,7 @@ class Chart {
 
     // Set your dimensions viewport
     this.width = 960; // this.element.offsetWidth;
-    this.height = 500; // this.width / 2;
+    this.height = 600; // this.width / 2;
     this.margin = { top: 50, right: 20, bottom: 50, left: 225 };
 
     // Set the dimesions of you chart
@@ -117,7 +117,7 @@ class Chart {
     d3.select('.x.axis').append('text')
       .attr("class", "x axis title")
       .attr('x', this.innerWidth)
-      .attr('y', 30)
+      .attr('y', 35)
       .text("EXPORTS (USD)");
 
     // Add y-axis ticks
@@ -126,19 +126,12 @@ class Chart {
       .attr("transform", 'translate(0, 0)')
       .call(yAxis)
 
-    // Add y-axis title
-    d3.select('.y.axis').append('text')
-      .attr("class", "y axis title")
-      .attr('x', -9)
-      .attr('y', 0)
-      .text("COUNTRIES");
-
     // Add chart title
     this.plot.append('text')
       .attr("class", "chart title")
       .attr('x', 0)
-      .attr('y', 0)
-      .text("Top 25 Drug Dealers in 2016");
+      .attr('y', -10)
+      .text("Top 25 Drug Dealers of 2016");
 
   }
 
