@@ -7,7 +7,7 @@ path {
 }
 
 /* Axis */
-.axis text {
+.y.axis text {
   font-size: 14px;
 }
 .y.axis line {
@@ -31,7 +31,7 @@ path {
 .chart.title {
   font-size: 32px;
 }
-.x.axis .title {
+.x.axis.title {
   font-size: 12px;
   fill: #D3D3D3;
   text-anchor: end;

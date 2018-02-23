@@ -1,8 +1,5 @@
-// Use the D3 library to read in our data
-d3.csv('data.csv').then( data => {
+d3.csv('data.csv').then(data => {
 
-  // Cycle throught the row to get your data into the right format
-  // for the chart you'll be creating.
   data.forEach(row => {
     row.exports = +row.exports
   })
@@ -13,8 +10,6 @@ d3.csv('data.csv').then( data => {
 
 });
 
-// This function executes all we need to create
-// our simple charte
 function createChart(data) {
 
   const chart = new Chart({
@@ -24,8 +19,6 @@ function createChart(data) {
 
 }
 
-// This constructor can be modified to any type
-// of chart we would like to build.
 class Chart {
 
   constructor(opts) {
@@ -33,12 +26,9 @@ class Chart {
     this.element = opts.element;
     this.data = opts.data;
 
-    // Create the chart
     this.draw();
 
   }
-
-  // UNCOMMENT ONCE YOU HAVE THE DATA
 
   draw() {
 
@@ -47,34 +37,29 @@ class Chart {
     this.height = 600; // this.width / 2;
     this.margin = { top: 70, right: 20, bottom: 50, left: 225 };
 
-    // Set the dimesions of you chart
+    // The inner height and width relate the space your chart will
+    // occupy excluding space for tiles and axises.
     this.innerHeight = this.height - (this.margin.top + this.margin.bottom);
     this.innerWidth = this.width - (this.margin.right + this.margin.left);
 
-    // Append the SVG that will contain your chart
     const svg = d3.select(this.element).append('svg');
 
     svg
       .attr('width', this.width)
       .attr('height', this.height);
 
-    // Now append the an element to position your
-    // chart with the SVG
     this.plot = svg.append('g')
       .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
 
-    // Time to create the other stuff
+    // Each of these methods have an important role to play
     this.createScales();
     this.addAxes();
+    this.addTitles();
     this.addChart();
 
   }
 
   createScales() {
-    // Shorthand to save typing
-    const m = this.margin;
-
-    // Set the scale for you chart
     // We set the domain to zero to make sure our bars
     // always start at zero. We don't want to truncate.
     this.xScale = d3.scaleLinear()
@@ -87,13 +72,11 @@ class Chart {
     this.yBand = d3.scaleBand()
       .paddingInner(.1)
       .rangeRound([this.innerHeight, 0])
-      .domain(this.data.map( d => d.exporter ));
+      .domain(this.data.map(d => d.exporter));
 
   }
 
   addAxes() {
-
-    const m = this.margin;
 
     // Create axises to be called later
     const xAxis = d3.axisBottom()
@@ -105,31 +88,31 @@ class Chart {
     // Custom format to clean up tick formattin
     const siFormat = d3.format(".2s")
     const customTickFormat = function (d) {
-        return siFormat(d).replace("G", "B");
-      };
+      return siFormat(d).replace("G", "B");
+    };
 
     // Call those axis generators
     this.plot.append("g")
       .attr("class", "x axis")
       .attr("transform", `translate(0, ${this.innerHeight})`)
-      .call(
-        xAxis
-          .ticks(10)
-          .tickSize(-this.innerHeight)
-          .tickFormat(customTickFormat));
-
-    // Add x-axis title
-    d3.select('.x.axis').append('text')
-      .attr("class", "axis title")
-      .attr('x', this.innerWidth)
-      .attr('y', 35)
-      .text("EXPORTS (USD)");
+      .call(xAxis
+        .ticks(10)
+        .tickSize(-this.innerHeight)
+        .tickFormat(customTickFormat));
 
     // Add y-axis ticks
     this.plot.append("g")
       .attr("class", "y axis")
-      .attr("transform", 'translate(0, 0)')
       .call(yAxis)
+  }
+
+  addTitles() {
+    // Add x-axis title
+    this.plot.append('text')
+      .attr("class", "x axis title")
+      .attr('x', this.innerWidth)
+      .attr('y', this.innerHeight + 30)
+      .text("EXPORTS (USD)");
 
     // Add chart title
     this.plot.append('text')
@@ -144,12 +127,9 @@ class Chart {
       .attr('x', 0)
       .attr('y', -5)
       .text("The top 25 are listed below.");
-
   }
 
   addChart() {
-
-    const m = this.margin;
 
     this.plot.selectAll(".bar")
       .data(this.data)
@@ -158,8 +138,7 @@ class Chart {
       .attr("x", 0)
       .attr("y", d => this.yBand(d.exporter))
       .attr("width", d => this.xScale(d.exports))
-      .attr("height", this.yBand.bandwidth())
-      .style()
+      .attr("height", this.yBand.bandwidth());
 
   }
 
