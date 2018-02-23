@@ -1,5 +1,5 @@
 
-# Makeover Monday - Week[##]
+# Makeover Monday - Week 8
 
 ### Original visualization
 ![Original visualization](https://cdn.howmuch.net/articles/66-1-231f.jpg)
@@ -14,7 +14,7 @@
 * The background map isn't very helpful
 
 ### What I did
-![Your visualizaiton](http://metacentricities.com/wp-content/uploads/2016/09/Lion-5.jpg)
+![The Makeover](https://raw.githubusercontent.com/robcrock/a_simple_bar_chart/master/screenshot.png)
 
 I'm still getting a handle on D3, so I made a simple bar chart that I'll be writting about soon so other people can learn to build their own.
 
