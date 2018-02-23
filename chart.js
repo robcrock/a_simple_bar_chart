@@ -74,13 +74,12 @@ class Chart {
     // Shorthand to save typing
     const m = this.margin;
 
-    // Calculate max and min for data
-    const xExtent = d3.extent(this.data, d => d.exports );
-
     // Set the scale for you chart
+    // We set the domain to zero to make sure our bars
+    // always start at zero. We don't want to truncate.
     this.xScale = d3.scaleLinear()
       .range([0, this.innerWidth])
-      .domain(xExtent);
+      .domain([0, d3.max(this.data, d => d.exports)]);
 
     // Range relates to pixels
     // Domain relates to data
@@ -103,13 +102,20 @@ class Chart {
     const yAxis = d3.axisLeft()
       .scale(this.yBand);
 
+    // Custom format to clean up tick formattin
+    const siFormat = d3.format(".2s")
+    const customTickFormat = function (d) {
+        return siFormat(d).replace("G", "B");
+      };
     // Call those axis generators
     this.plot.append("g")
       .attr("class", "x axis")
       .attr("transform", `translate(0, ${this.innerHeight})`)
-      .call(xAxis
-        .ticks(10)
-        .tickFormat(d3.format(".2s")));
+      .call(
+          xAxis
+          .ticks(10)
+          .tickSize(-this.innerHeight)
+          .tickFormat(customTickFormat));
 
     // Add x-axis title
     d3.select('.x.axis').append('text')
@@ -136,7 +142,7 @@ class Chart {
       .attr("class", "chart subtitle")
       .attr('x', 0)
       .attr('y', -5)
-      .text("Below are the top 25 countries and their 2016 sales");
+      .text("The top 25 countries are listed below.");
 
   }
 

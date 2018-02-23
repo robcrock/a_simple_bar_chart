@@ -1,10 +1,26 @@
 text {
   font-family: roboto;
+}
+path {
+  stroke: none;
+}
+/* .tick line {
+  stroke: #D3D3D3;
+  stroke-width: .5;
+}*/
+g.y.axis g.tick text {
   font-size: 14px;
+}
+g.y.axis g.tick line {
+  display: none;
+}
+g.x.axis g.tick text {
+  font-size: 12px;
   fill: #333333;
 }
-path, line {
-  stroke: none;
+g.x.axis g.tick line {
+  stroke-width: 0.25;
+  fill: #333333;
 }
 .chart.title {
   font-size: 18px;
