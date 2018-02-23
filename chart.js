@@ -107,19 +107,20 @@ class Chart {
     const customTickFormat = function (d) {
         return siFormat(d).replace("G", "B");
       };
+
     // Call those axis generators
     this.plot.append("g")
       .attr("class", "x axis")
       .attr("transform", `translate(0, ${this.innerHeight})`)
       .call(
-          xAxis
+        xAxis
           .ticks(10)
           .tickSize(-this.innerHeight)
           .tickFormat(customTickFormat));
 
     // Add x-axis title
     d3.select('.x.axis').append('text')
-      .attr("class", "x axis title")
+      .attr("class", "axis title")
       .attr('x', this.innerWidth)
       .attr('y', 35)
       .text("EXPORTS (USD)");
@@ -135,14 +136,14 @@ class Chart {
       .attr("class", "chart title")
       .attr('x', 0)
       .attr('y', -25)
-      .text("Who sold the most medicine in 2016?");
+      .text("Who made the most on medicine exports in 2016?");
 
     // Add chart subtitle
     this.plot.append('text')
       .attr("class", "chart subtitle")
       .attr('x', 0)
       .attr('y', -5)
-      .text("The top 25 countries are listed below.");
+      .text("The top 25 are listed below.");
 
   }
 

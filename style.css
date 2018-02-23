@@ -1,40 +1,43 @@
+/* General */
 text {
   font-family: roboto;
 }
 path {
   stroke: none;
 }
-/* .tick line {
-  stroke: #D3D3D3;
-  stroke-width: .5;
-}*/
-g.y.axis g.tick text {
+
+/* Axis */
+.axis text {
   font-size: 14px;
 }
-g.y.axis g.tick line {
+.y.axis line {
   display: none;
 }
-g.x.axis g.tick text {
+.x.axis text {
   font-size: 12px;
   fill: #333333;
 }
-g.x.axis g.tick line {
-  stroke-width: 0.25;
-  fill: #333333;
+.x.axis line {
+  stroke-width: 1;
+  stroke: #D3D3D3;
+  shape-rendering: crispEdges;
+}
+
+/* Titles */
+.chart.subtitle {
+  font-size: 16px;
+  fill: #D3D3D3;
 }
 .chart.title {
-  font-size: 18px;
-  text-anchor: start;
+  font-size: 32px;
 }
-.chart.title {
-  font-size: 42px;
-  text-anchor: start;
-}
-.x.axis.title {
+.x.axis .title {
   font-size: 12px;
   fill: #D3D3D3;
   text-anchor: end;
 }
+
+/* Shapes */
 rect {
   fill: #3399CC;
 }
