@@ -1,8 +1,8 @@
 d3.csv('data.csv').then(data => {
 
   data.forEach(row => {
-    row.exports = +row.exports
-  })
+    row.exports = parseInt(row.exports);
+  });
 
   data.sort((a, b) => a.exports - b.exports);
 
@@ -56,7 +56,7 @@ class Chart {
     // Call the necessary functions
     this.createScales();
     this.addAxes();
-    this.addTitles()
+    this.addTitles();
     this.addChart();
   }
 
@@ -71,7 +71,7 @@ class Chart {
     // Domain relates to data
 
     this.yBand = d3.scaleBand()
-      .paddingInner(.1)
+      .paddingInner(0.1)
       .domain(this.data.map(d => d.exporter))
       .rangeRound([this.innerHeight, 0]);
 
@@ -86,7 +86,7 @@ class Chart {
       .scale(this.yBand);
 
     // Custom format to clean up tick formattin
-    const siFormat = d3.format(".2s")
+    const siFormat = d3.format(".2s");
     const customTickFormat = function (d) {
       return siFormat(d).replace("G", "B");
     };
@@ -105,7 +105,7 @@ class Chart {
     this.plot.append("g")
       .attr("class", "y axis")
       .attr("transform", 'translate(0, 0)')
-      .call(yAxis)
+      .call(yAxis);
   }
 
   addTitles() {
