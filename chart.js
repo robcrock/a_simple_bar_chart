@@ -4,17 +4,18 @@ d3.csv('data.csv').then(data => {
     row.exports = +row.exports
   })
 
-  data.sort((desc, ending) => desc.exports - ending.exports);
+  data.sort((a, b) => a.exports - b.exports);
 
   createChart(data);
-
 });
 
 function createChart(data) {
 
   const chart = new Chart({
     element: document.querySelector('body'),
-    data: data
+    data: data,
+    title: "Who made the most on medicine exports in 2016?",
+    subtitle: "The top 25 are listed below."
   });
 
 }
@@ -25,6 +26,8 @@ class Chart {
 
     this.element = opts.element;
     this.data = opts.data;
+    this.title = opts.title;
+    this.subtitle = opts.subtitle;
 
     this.draw();
 
@@ -32,13 +35,12 @@ class Chart {
 
   draw() {
 
-    // Set your dimensions viewport
-    this.width = 960; // this.element.offsetWidth;
-    this.height = 600; // this.width / 2;
+    // Create the parent SVG
+    this.width = 960;
+    this.height = 600;
     this.margin = { top: 70, right: 20, bottom: 50, left: 225 };
 
-    // The inner height and width relate the space your chart will
-    // occupy excluding space for tiles and axises.
+    // Give your title and axes some space
     this.innerHeight = this.height - (this.margin.top + this.margin.bottom);
     this.innerWidth = this.width - (this.margin.right + this.margin.left);
 
@@ -51,33 +53,31 @@ class Chart {
     this.plot = svg.append('g')
       .attr('transform', `translate(${this.margin.left},${this.margin.top})`);
 
-    // Each of these methods have an important role to play
+    // Call the necessary functions
     this.createScales();
     this.addAxes();
-    this.addTitles();
+    this.addTitles()
     this.addChart();
-
   }
 
   createScales() {
     // We set the domain to zero to make sure our bars
     // always start at zero. We don't want to truncate.
     this.xScale = d3.scaleLinear()
-      .range([0, this.innerWidth])
-      .domain([0, d3.max(this.data, d => d.exports)]);
+      .domain([0, d3.max(this.data, d => d.exports)])
+      .range([0, this.innerWidth]);
 
     // Range relates to pixels
     // Domain relates to data
 
     this.yBand = d3.scaleBand()
       .paddingInner(.1)
-      .rangeRound([this.innerHeight, 0])
-      .domain(this.data.map(d => d.exporter));
+      .domain(this.data.map(d => d.exporter))
+      .rangeRound([this.innerHeight, 0]);
 
   }
 
   addAxes() {
-
     // Create axises to be called later
     const xAxis = d3.axisBottom()
       .scale(this.xScale);
@@ -95,7 +95,8 @@ class Chart {
     this.plot.append("g")
       .attr("class", "x axis")
       .attr("transform", `translate(0, ${this.innerHeight})`)
-      .call(xAxis
+      .call(
+      xAxis
         .ticks(10)
         .tickSize(-this.innerHeight)
         .tickFormat(customTickFormat));
@@ -103,34 +104,34 @@ class Chart {
     // Add y-axis ticks
     this.plot.append("g")
       .attr("class", "y axis")
+      .attr("transform", 'translate(0, 0)')
       .call(yAxis)
   }
 
   addTitles() {
-    // Add x-axis title
-    this.plot.append('text')
-      .attr("class", "x axis title")
-      .attr('x', this.innerWidth)
-      .attr('y', this.innerHeight + 30)
-      .text("EXPORTS (USD)");
-
     // Add chart title
     this.plot.append('text')
       .attr("class", "chart title")
       .attr('x', 0)
-      .attr('y', -25)
-      .text("Who made the most on medicine exports in 2016?");
+      .attr('y', -30)
+      .text(this.title);
 
     // Add chart subtitle
     this.plot.append('text')
       .attr("class", "chart subtitle")
       .attr('x', 0)
       .attr('y', -5)
-      .text("The top 25 are listed below.");
+      .text(this.subtitle);
+
+    // Add x-axis title
+    this.plot.append('text')
+      .attr("class", "x axis title")
+      .attr('x', this.innerWidth)
+      .attr('y', this.innerHeight + 30)
+      .text("EXPORTS (USD)");
   }
 
   addChart() {
-
     this.plot.selectAll(".bar")
       .data(this.data)
       .enter().append("rect")
@@ -139,7 +140,6 @@ class Chart {
       .attr("y", d => this.yBand(d.exporter))
       .attr("width", d => this.xScale(d.exports))
       .attr("height", this.yBand.bandwidth());
-
   }
 
 }
