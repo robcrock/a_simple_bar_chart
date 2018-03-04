@@ -1,26 +1,4 @@
-d3.csv('data.csv').then(data => {
-
-  data.forEach(row => {
-    row.exports = parseInt(row.exports);
-  });
-
-  data.sort((a, b) => a.exports - b.exports);
-
-  createChart(data);
-});
-
-function createChart(data) {
-
-  const chart = new Chart({
-    element: document.querySelector('body'),
-    data: data,
-    title: "Who made the most on medicine exports in 2016?",
-    subtitle: "The top 25 are listed below."
-  });
-
-}
-
-class Chart {
+class barChart {
 
   constructor(opts) {
 
@@ -104,7 +82,6 @@ class Chart {
     // Add y-axis ticks
     this.plot.append("g")
       .attr("class", "y axis")
-      .attr("transform", 'translate(0, 0)')
       .call(yAxis);
   }
 
